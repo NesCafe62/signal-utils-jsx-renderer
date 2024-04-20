@@ -1,0 +1,18 @@
+{
+	"name": "signal-utils-jsx-renderer",
+	"description": "jsx renderer for signal-utils",
+	"version": "1.0.0",
+	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/NesCafe62/signal-utils-jsx-renderer"
+	},
+	"dependencies": {
+		"@babel/core": "^7.24.4",
+		"@babel/types": "^7.24.0",
+		"@babel/plugin-syntax-jsx": "^7.24.1"
+	},
+	"exports": {
+		"./*": "./src/*"
+	}
+}
