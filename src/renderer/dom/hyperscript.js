@@ -1,3 +1,4 @@
+import { Signal } from 'signal-polyfill';
 import { effect } from 'signal-utils/subtle/microtask-effect';
 
 export function render(app, el, props = undefined) {
@@ -47,20 +48,21 @@ export function h(type, props = null, children = null) {
 		if (value === undefined) {
 			continue;
 		}
+		const val = resolve(value);
 		if (prop === 'innerHTML') {
-			(typeof value === 'function')
-				? bindAttrDirect(el, prop, value)
-				: el.innerHTML = value;
+			(typeof val === 'function')
+				? bindAttrDirect(el, prop, val)
+				: el.innerHTML = val;
 			continue;
 		}
-		(typeof value === 'function')
-			? bindAttr(el, prop, value)
-			: el.setAttribute(prop, value);
+		(typeof val === 'function')
+			? bindAttr(el, prop, val)
+			: el.setAttribute(prop, val);
 	}
 	if (children) {
 		const length = children.length;
 		for (let i = 0; i < length; i++) {
-			let child = children[i];
+			let child = resolve(children[i]);
 			if (typeof child === 'function') {
 				const getter = child;
 				child = document.createTextNode('');
@@ -88,6 +90,16 @@ export function template(render) {
 	}
 }
 
+function resolve(value) {
+	if (
+		value instanceof Signal.State ||
+		value instanceof Signal.Computed
+	) {
+		return () => value.get();
+	}
+	return value;
+}
+
 export function bindText(el, getter) {
 	effect(() => {
 		el.nodeValue = getter();
@@ -113,7 +125,7 @@ export function bindAttrDirect(el, attrName, getter) {
 
 export function bindClassList(el, classList) {
 	for (const className in classList) {
-		const hasClass = classList[className];
+		const hasClass = resolve(classList[className]);
 		const applyClass = function(hasClass) {
 			if (hasClass) {
 				el.classList.add(className);
@@ -128,17 +140,18 @@ export function bindClassList(el, classList) {
 }
 
 export function bindShow(el, getter) {
+	const value = resolve(getter);
 	const applyStyle = function(isShow) {
 		el.style.display = isShow ? '' : 'none';
 	};
-	(typeof getter === 'function')
-		? effect(() => applyStyle(getter()))
-		: applyStyle(getter);
+	(typeof value === 'function')
+		? effect(() => applyStyle(value()))
+		: applyStyle(value);
 }
 
 export function bindStyle(el, styles) {
 	for (const propName in styles) {
-		const value = styles[propName];
+		const value = resolve(styles[propName]);
 		const applyStyle = propName.startsWith('--')
 			? function(value) {
 				el.style.setProperty(propName, value);
