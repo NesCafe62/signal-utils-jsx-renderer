@@ -13,6 +13,7 @@
 		"@babel/plugin-syntax-jsx": "^7.24.1"
 	},
 	"exports": {
-		"./*": "./src/*"
+		"./renderer/dom/hyperscript": "./src/renderer/dom/hyperscript.js",
+		"./vite-plugin-jsx": "./src/vite-plugin-jsx/index.js"
 	}
 }
