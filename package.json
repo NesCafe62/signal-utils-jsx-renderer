@@ -10,8 +10,7 @@
 	"dependencies": {
 		"@babel/core": "^7.24.4",
 		"@babel/types": "^7.24.0",
-		"@babel/plugin-syntax-jsx": "^7.24.1",
-		"signal-utils": "git://github.com/proposal-signals/signal-utils.git"
+		"@babel/plugin-syntax-jsx": "^7.24.1"
 	},
 	"exports": {
 		"./renderer/dom/hyperscript": "./src/renderer/dom/hyperscript.js",
